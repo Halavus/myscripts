@@ -1,0 +1,59 @@
+#! /bin/bash
+
+evtdry=""
+del=""
+del_ex=""
+
+# ssh parameters are stored in 
+#	~/.ssh/config
+
+if [[ "$3" = "dry" ]] || [[ "$2" = "dry" ]] || [[ "$1" = "dry" ]] ; then
+
+	evtdry="--dry-run "
+
+fi
+
+if [[ "$3" = "--delete" ]] || [[ "$2" = "--delete" ]] || [[ "$1" = "--delete" ]] ; then
+
+	del="--delete"
+
+fi
+
+if [[ "$3" = "--delete-excluded" ]] || [[ "$2" = "--delete-excluded" ]] || [[ "$1" = "--delete-excluded" ]] ; then
+
+	del_ex="--delete-excluded"
+
+fi
+
+if [[ "$1" = "pull" ]] ; then
+
+	sourcefolder="www.musikpunkt.ch/"
+	dest="/shared/sites/www.musikpunkt.ch" 
+
+	rsync -avz --exclude-from=/usr/local/bin/walo_scripts/mpsync_exclude.txt $evtdry $del $del_ex --rsh=ssh muspnjyc@musikpunkt.ch:$sourcefolder $dest
+
+else 
+	echo "Forbidden"
+#	dest="shopware.valentinoberson.ch"
+#	sourcefolder="/home/walo/code_the_web/shopware.valentinoberson.ch/" 
+#	ACTION='rsync -avz $evtdry --rsh=ssh $sourcefolder valenti@valentinoberson.ch:/$dest' 
+#
+#	if [[ "$del" = "--delete" ]] ; then
+#
+#		read -p "Deleting on a push rsync can broke the entire site. Are you sure? (Y/n) " -n 1 -r
+#		echo    # (optional) move to a new line
+#		if [[ $REPLY =~ ^[Y]$ ]] ; then
+#		
+#			# rsync -avz $evtdry --rsh=ssh $sourcefolder valenti@valentinoberson.ch:/$dest $del
+#			rsync -avz $evtdry $sourcefolder valenti@valentinoberson.ch:/$dest $del
+#		else
+#			echo "Aborded"
+#
+#		fi
+#		
+#	else
+#		rsync -avz $evtdry --rsh=ssh $sourcefolder valenti@valentinoberson.ch:/$dest
+#
+#	fi
+
+fi

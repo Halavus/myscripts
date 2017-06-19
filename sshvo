@@ -1,0 +1,27 @@
+#!/bin/bash
+# ssh parameters are stored in
+#	~/.ssh/config
+
+if [[ "$1" = "coklea" ]]; then
+
+	if [[ "$2" = "current" ]]; then
+
+		path="coklea_2017/"
+
+	fi
+
+		ssh -vt valenti@valentinoberson.ch "cd /coklea.valentinoberson.ch/wp-content/themes/$path ; bash";
+
+elif [[ $1 = "test" ]]; then
+
+	if [[ "$2" = "" ]]; then
+
+		path="test_child_2017/"
+
+	fi
+
+	ssh -vt valenti@valentinoberson.ch "cd /test.valentinoberson.ch/wp-content/themes/$path ; bash";
+	
+else ssh -vt valenti@valentinoberson.ch "bash";
+
+fi

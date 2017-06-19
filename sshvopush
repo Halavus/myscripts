@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# use:
+# sshvopush $1=localfile $2=remotedest
+#
+# TODO
+# sshvopush $1=localfile $2=option { --wpcontent --coklea --home --etc. } $@=rest_of_path
+# scp -P 2121 $1 valenti@valentinoberson.ch:$2
+
+
+
+
+
+
+
+scp -P 2121 $1 valenti@valentinoberson.ch:$2

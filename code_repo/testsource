@@ -1,0 +1,5 @@
+#! /bin/bash
+
+source appdata/thesource.conf
+
+echo $value

@@ -1,0 +1,92 @@
+#! /bin/bash
+
+# ssh parameters are stored in 
+#	~/.ssh/config
+
+# initializing options
+evtdry=""
+del=""
+custom_arg=""
+
+# checker (array) for pull or push to avoid pull and push together
+checker=()
+
+# source from full bash getopts:
+# http://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
+# 
+# Usage   ./myscript.sh -e conf -s /etc -l /usr/lib /etc/hosts 
+#
+# Use -gt 1 to consume two arguments per pass in the loop (e.g. each
+# argument has a corresponding value to go with it).
+# Use -gt 0 to consume one or more arguments per pass in the loop (e.g.
+# some arguments don't have a corresponding value to go with it such
+# as in the --default example).
+# note: if this is set to -gt 0 the /etc/hosts part is not recognized ( may be a bug )
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+	pull|--pull)
+		sourcefolder="gongworld.ch:"
+		dest="/shared/sites/metanet_backup/musikpunkt/" 
+		checker+=('pull')
+		;;
+	push|--push)
+		sourcefolder="/shared/sites/metanet_backup/musikpunkt/"
+		dest="gongworld.ch:"
+		checker+=('push')
+		;;
+	-n|--dry-run)
+		evtdry="--dry-run"
+		;;
+	--delete)
+		del="--delete"
+		;;
+	-C|--custom-arg)
+		custom_arg="$2"
+		shift
+		;;
+	*)
+	unknown=$1
+	{ echo "Unknown option:\"$unknown\". Too dangerous. Aboarding..."; exit 1; }	# unknown option
+	;;
+esac
+shift
+done
+
+##################### ERRORS ##################### 
+
+if [[ ${#checker[@]} == 2 ]] ; then
+	
+	{ echo "Usage of --pull and --push together is not permitted"; exit 1; }
+
+elif [[ ${#checker[@]} == 0 ]] ; then
+
+	{ echo "Please add an option (pull or push)"; exit 1; }
+fi
+
+##################### CODE ##################### 
+
+if [[ "${checker[0]}" = "pull" ]] ; then
+
+	ssh -vt gongwor@gongworld.ch "mysqldump -h 127.0.0.1 -uvalentinmp -pboYa488_  wordpress_23 > wordpress_23_bak.sql && exit ;" && rsync -avzh $evtdry --rsh=ssh gongwor@$sourcefolder $dest $del
+
+else 
+
+	if [[ "$del" = "--delete" ]] ; then
+
+		read -p "Deleting on a push rsync can broke the entire site. Are you sure? (Y/n) " -n 1 -r
+		echo    # (optional) move to a new line
+		if [[ $REPLY =~ ^[Y]$ ]] ; then
+		
+			rsync -avzh $evtdry $sourcefolder gongwor@$dest $del
+		else
+			echo "Aborded"
+		fi
+	else
+		rsync -avzh $evtdry --rsh=ssh $sourcefolder gongwor@$dest
+	fi
+fi
+
+echo "checker: ${checker[@]}"

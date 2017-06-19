@@ -1,0 +1,6 @@
+Version2013
+files/swissbassoondays
+files/media/A*
+files/documents/*.pdf
+media/image/thumbnail
+cache/production_*

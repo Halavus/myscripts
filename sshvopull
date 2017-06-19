@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# use:
+# sshvopull $1=remotefile $2=localdest
+
+scp -P 2121 valenti@valentinoberson.ch:$1 $2

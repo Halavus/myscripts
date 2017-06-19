@@ -1,0 +1,10 @@
+#! /bin/bash
+
+printf "
+Using adb-sync protocol to sync from device.
+Download-link: https://github.com/google/adb-sync
+
+"
+adb-sync --reverse /storage/emulated/0/DCIM /shared/Pictures/SD_Valentin/ ;
+adb-sync --reverse /storage/emulated/0/WhatsApp/Media/WhatsApp\ Images /shared/Pictures/SD_Valentin/ ;
+adb-sync --reverse /storage/emulated/0/WhatsApp/Media/WhatsApp\ Video /shared/Pictures/SD_Valentin/ ;

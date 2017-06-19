@@ -1,0 +1,6 @@
+#!/bin/bash
+# ssh parameters are stored in
+#	~/.ssh/config
+
+	
+ssh -vt gongwor@gongworld.ch "cd swisstrombonedays.ch/wp-content/themes/event_child/ && bash";

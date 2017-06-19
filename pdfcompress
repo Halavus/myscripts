@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# pdftk is needed
+# Step 1: convert to ps
+# Step 2: convert back to pdf
+# source: https://pandemoniumillusion.wordpress.com/2008/05/07/compress-a-pdf-with-pdftk/
+
+INPUT="$1"
+OUTPUT=""
+PS=".ps"
+PDF=".pdf"
+COMP="_compressed"
+TMP="/tmp/$INPUT$PS"
+
+if [[ -z "$2" ]] ; then
+	read -p "Original File will be overwriten. Append \"$COMP\" (c), continue (Y) or aboard (n) " -n 1 -r
+	echo    # (optional) move to a new line
+	if [[ $REPLY =~ ^[Y]$ ]] ; then
+		pdf2ps "$INPUT" "$TMP"
+		ps2pdf "$TMP" "$INPUT"
+
+	elif [[ $REPLY =~ ^[c]$ ]] ; then
+		pdf2ps "$INPUT" "$TMP"
+		# TODO add sed args to remove .pdf before _compressed
+                newname=$(sed -e "s/.pdf//g" <<< $INPUT)$COMP$PDF
+		ps2pdf "$TMP" "$newname"
+	fi
+
+else 
+	OUTPUT="$2"
+	pdf2ps "$INPUT" "$TMP"
+	ps2pdf "$TMP" "$2"
+fi
