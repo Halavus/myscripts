@@ -30,7 +30,7 @@ if [[ "$1" = "pull" ]] ; then
 	sourcefolder="www.musikpunkt.ch/"
 	dest="/shared/sites/www.musikpunkt.ch" 
 
-	rsync -avz --exclude-from=/usr/local/bin/walo_scripts/mpsync_exclude.txt $evtdry $del $del_ex --rsh=ssh muspnjyc@musikpunkt.ch:$sourcefolder $dest
+	rsync -avz --exclude-from=/usr/local/bin/scripts_walo/mpsync_exclude.txt $evtdry $del $del_ex --rsh=ssh muspnjyc@musikpunkt.ch:$sourcefolder $dest
 
 else 
 	echo "Forbidden"
